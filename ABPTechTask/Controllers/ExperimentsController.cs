@@ -26,46 +26,58 @@ namespace ABPTechTask.Controllers
         [Route("experiment/button-color")]
         public async Task<IActionResult> ButtonColorExperimnt([FromQuery(Name = "device-token")] string deviceToken)
         {
-            // Отримання інформації про експеримент з бази даних за ключем "button_color" за допомогою Mediator.
-            var experiment = await _mediator.Send(new FindExperiment.Query { Key = "button_color" });
-
-            // Пошук результату експерименту за токеном пристрою.
-            var existingResult = await _mediator.Send(new FindResult.Query { DeviceToken = deviceToken });
-
-            if (existingResult != null)
+            try
             {
-                // Якщо пристрій вже брав участь у експерименті
-                if (existingResult.ExperimentId != experiment.Id)
+                // Отримання інформації про експеримент з бази даних за ключем "button_color" за допомогою Mediator.
+                var
+                    experiment =
+
+                        await _mediator.Send(new FindExperiment.Query { Key = "button_color" });
+
+                // Пошук результату експерименту за токеном пристрою.
+                var existingResult = await _mediator.Send(new FindResult.Query { DeviceToken = deviceToken });
+
+                if (existingResult != null)
                 {
-                    return Ok("Пристрій вже бере участь в експерименті");
+                    // Якщо пристрій вже брав участь у експерименті
+                    if (existingResult.ExperimentId != experiment.Id)
+                    {
+                        return Ok("Пристрій вже бере участь в експерименті");
+                    }
+                    // Якщо пристрій вже взяв участь в цьому експерименті
+                    else if (existingResult.ExperimentId == experiment.Id)
+                    {
+                        return Ok(new Dictionary<string, string>
+                            { { "key", "button_color" }, { "value", existingResult.Value } });
+                    }
                 }
-                // Якщо пристрій вже взяв участь в цьому експерименті
-                else if (existingResult.ExperimentId == experiment.Id)
+
+                // Розділення рядка опцій на окремі варіанти.
+                var options = experiment.Options.Split(',');
+
+                // Генерація випадкового індексу для вибору опції.
+                var random = new Random();
+                var selectedOption = options[random.Next(options.Length)];
+
+                // Створення об'єкта результату експерименту.
+                var result = new ExperimentResult
                 {
-                    return Ok(new { key = "button_color", value = existingResult.Value });
-                }
+                    ExperimentId = experiment.Id,
+                    DeviceToken = deviceToken.ToLower(), // Перетворення токену до нижнього регістру.
+                    Value = selectedOption
+                };
+
+                // Збереження результату в базі даних за допомогою Mediator.
+                await _mediator.Send(new AddResult.Command { ExperimentResult = result });
+
+                // Повертаємо результат експерименту.
+                return Ok(new Dictionary<string, string> { { "key", "button_color" }, { "value", selectedOption } });
             }
-
-            // Розділення рядка опцій на окремі варіанти.
-            var options = experiment.Options.Split(',');
-
-            // Генерація випадкового індексу для вибору опції.
-            var random = new Random();
-            var selectedOption = options[random.Next(options.Length)];
-
-            // Створення об'єкта результату експерименту.
-            var result = new ExperimentResult
+            catch (Exception ex)
             {
-                ExperimentId = experiment.Id,
-                DeviceToken = deviceToken.ToLower(), // Перетворення токену до нижнього регістру.
-                Value = selectedOption
-            };
-
-            // Збереження результату в базі даних за допомогою Mediator.
-            await _mediator.Send(new AddResult.Command { ExperimentResult = result });
-
-            // Повертаємо результат експерименту.
-            return Ok(new { key = "button_color", value = selectedOption });
+                return BadRequest();
+            }
+            
         }
 
 
@@ -90,7 +102,7 @@ namespace ABPTechTask.Controllers
                 // Якщо пристрій вже взяв участь в цьому експерименті
                 else if (existingResult.ExperimentId == experiment.Id)
                 {
-                    return Ok(new { key = "price", value = existingResult.Value });
+                    return Ok(new Dictionary<string,string> { {"key" ,"price"}, {"value" , existingResult.Value} });
                 }
             }
 
@@ -126,7 +138,7 @@ namespace ABPTechTask.Controllers
             // Збереження результату в базі даних за допомогою Mediator
             await _mediator.Send(new AddResult.Command { ExperimentResult = result });
 
-            return Ok(new { key = "price", value = selectedPrice.ToString() });
+            return Ok(new Dictionary<string,string> { {"key" ,"price"}, {"value" , selectedPrice.ToString()} });
         }
 
         [HttpGet]

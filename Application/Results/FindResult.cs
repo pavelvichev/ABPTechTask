@@ -32,7 +32,7 @@ namespace Application.Results
                 {
                     // Виконання SQL-запиту до бази даних для пошуку результату експерименту за токеном пристрою.
                     var result = await _apiContext.ExperimentResults
-                        .FromSqlRaw($"EXEC FindResult {request.DeviceToken}").FirstOrDefaultAsync(cancellationToken);
+                        .FromSqlInterpolated($"FindResult {request.DeviceToken}").FirstOrDefaultAsync(cancellationToken);
 
                     // Повертаємо перший результат запиту (або null, якщо результат не знайдений).
                     return result;

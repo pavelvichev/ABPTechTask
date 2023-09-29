@@ -32,7 +32,7 @@ namespace Application.Experiments
                 try // Обробка винятків зв'язаних з помилкою під час звернення до бд
                 {
                     // Виконання SQL-запиту до бази даних для пошуку експерименту за ключем.
-                    var experiment = await _apiContext.Experiments.FromSqlRaw($"Exec FindExperiment {request.Key}")
+                    var experiment = await _apiContext.Experiments.FromSqlInterpolated($"FindExperiment {request.Key}")
                         .ToListAsync();
 
                     // Повертаємо перший результат запиту (або null, якщо результат не знайдений).
