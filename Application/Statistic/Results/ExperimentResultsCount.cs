@@ -10,7 +10,7 @@ namespace Application.Statistic.Results
         // Клас запиту, реалізує інтерфейс IRequest<int>
         public class Query : IRequest<int>
         {
-            public int ExperimentId { get; set; } // Параметр запиту - ідентифікатор експерименту.
+            public int ExperimentId { get; init; } // Параметр запиту - ідентифікатор експерименту.
         }
 
         // Обробник запиту, реалізує інтерфейс IRequestHandler<Query, int>.

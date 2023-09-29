@@ -9,8 +9,8 @@ namespace Domain
     public class Experiment
     {
         public int Id { get; set; }
-        public string Key { get; set; }
-        public string Options { get; set; }
+        public  string Key { get; set; }
+        public  string Options { get; set; }
     }
 
     

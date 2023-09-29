@@ -10,8 +10,8 @@ namespace Persistance
         }
         public ABContext(DbContextOptions<ABContext> options) : base (options) { }
        
-        public DbSet<ExperimentResult> ExperimentResults { get; set; }
-        public DbSet<Experiment> Experiments { get; set; }
+        public virtual DbSet<ExperimentResult> ExperimentResults { get; set; }
+        public virtual DbSet<Experiment> Experiments { get; set; }
 
     }
 }
