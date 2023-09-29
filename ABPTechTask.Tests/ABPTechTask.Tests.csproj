@@ -34,8 +34,4 @@
     <ProjectReference Include="..\Persistance\Persistance.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Application\Experiment\" />
-  </ItemGroup>
-
 </Project>

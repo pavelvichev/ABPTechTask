@@ -11,7 +11,7 @@ namespace Application.Results
         // Клас команди, який не повертає результат, реалізує інтерфейс IRequest.
         public class Command : IRequest
         {
-            public ExperimentResult ExperimentResult { get; set; } // Параметр команди - результат експерименту для додавання.
+            public ExperimentResult ExperimentResult { get; init; } // Параметр команди - результат експерименту для додавання.
         }
 
         // Обробник команди, реалізує інтерфейс IRequestHandler<Command>.
@@ -31,10 +31,10 @@ namespace Application.Results
                 try // Обробка винятків зв'язаних з помилкою під час звернення до бд
                 {
                     // Виконання SQL-запиту до бази даних для додавання результату експерименту.
-                   var res =   _context.Database.ExecuteSql($"AddResult {request.ExperimentResult.ExperimentId}, {request.ExperimentResult.DeviceToken}, {request.ExperimentResult.Value}");
+                    await _context.Database.ExecuteSqlAsync($"AddResult {request.ExperimentResult.ExperimentId}, {request.ExperimentResult.DeviceToken}, {request.ExperimentResult.Value}", cancellationToken);
                     
                     // Збереження змін у базі даних.
-                     _context.SaveChanges();
+                     await _context.SaveChangesAsync(cancellationToken);
                      
                 }
                 catch (Exception ex)

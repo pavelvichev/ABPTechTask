@@ -4,9 +4,10 @@ using Application.Statistic.Results;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ABPTechTask.Tests.Controller;
+namespace ABPTechTask.Tests.Controller.Valid;
 
 public class ControllerValidStatisticTest
 {
@@ -20,8 +21,7 @@ public class ControllerValidStatisticTest
         var experimentPrice = new Experiment { Id = 2, Key = "price" };
         var experimentButtonColorResultCount = 10;
         var experimentPriceResultCount = 5;
-
-        // Mock the Mediator and its responses.
+        
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindExperiment.Query>(), default))
             .ReturnsAsync((FindExperiment.Query query, System.Threading.CancellationToken cancellationToken) =>
@@ -33,6 +33,8 @@ public class ControllerValidStatisticTest
 
                 return null;
             });
+        
+        var logger = new Mock<ILogger<ExperimentsController>>();
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<ExperimentResultsCount.Query>(), default))
@@ -46,7 +48,7 @@ public class ControllerValidStatisticTest
                 return 0;
             });
 
-        var controller = new ExperimentsController(mediatorMock.Object);
+        var controller = new ExperimentsController(mediatorMock.Object,logger.Object);
 
         // Act
         var result = await controller.GetStatistic();

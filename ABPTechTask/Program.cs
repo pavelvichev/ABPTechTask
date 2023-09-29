@@ -1,8 +1,6 @@
 using Application.Results;
-using Domain;
 using Microsoft.EntityFrameworkCore;
 using Persistance;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 

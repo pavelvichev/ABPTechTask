@@ -2,15 +2,13 @@
 using Application.Experiments;
 using Application.Results;
 using Domain;
-using EntityFrameworkCore.Testing.Moq;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
-using Persistance;
 
-namespace ABPTechTask.Tests.Controller;
+namespace ABPTechTask.Tests.Controller.Valid;
 
 public class ControllerValidButtonTests
 {
@@ -20,29 +18,30 @@ public class ControllerValidButtonTests
     public async Task ButtonColorExperiment_DeviceHasNoExistingResult_ReturnsNewResult()
     {
         // Arrange
-        var deviceToken = "your-device-token";
+        var deviceToken = "myToken";
 
         
         var mediatorMock = new Mock<IMediator>();
+        var logger = new Mock<ILogger<ExperimentsController>>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindExperiment.Query>(), default))
             .ReturnsAsync(new Experiment { Id = 1, Key = "button_color", Options = "red,green,blue" });
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindResult.Query>(), default))
-            .ReturnsAsync((ExperimentResult)null); // Simulate no existing result.
+            .ReturnsAsync((ExperimentResult)null);
         
         
-        var controller = new ExperimentsController(mediatorMock.Object);
+        var controller = new ExperimentsController(mediatorMock.Object, logger.Object);
 
         // Act
         
-        var result = await controller.ButtonColorExperimnt(deviceToken);
+        var result = await controller.ButtonColorExperiment(deviceToken);
         
     
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var responseObject = Assert.IsType<Dictionary<string, string>>(okResult.Value); // Import System.Collections.Generic for Dictionary.
+        var responseObject = Assert.IsType<Dictionary<string, string>>(okResult.Value);
         Assert.Equal("button_color", responseObject["key"]);
         Assert.Contains(responseObject["value"], new[] {"blue" , "green", "red"});
         
@@ -52,22 +51,22 @@ public class ControllerValidButtonTests
     public async Task ButtonColorExperiment_DeviceHasExistingResult_ReturnsExistingResult()
     {
         // Arrange
-        var deviceToken = "your-device-token";
-
-        // Mock the Mediator and its responses.
+        var deviceToken = "myToken";
+        
         var mediatorMock = new Mock<IMediator>();
+        var logger = new Mock<ILogger<ExperimentsController>>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindExperiment.Query>(), default))
             .ReturnsAsync(new Experiment { Id = 1, Key = "button_color", Options = "red,green,blue"});
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindResult.Query>(), default))
-            .ReturnsAsync(new ExperimentResult { ExperimentId = 1, DeviceToken = deviceToken, Value = "green" }); // Simulate an existing result.
+            .ReturnsAsync(new ExperimentResult { ExperimentId = 1, DeviceToken = deviceToken, Value = "green" }); 
 
-        var controller = new ExperimentsController(mediatorMock.Object);
+        var controller = new ExperimentsController(mediatorMock.Object, logger.Object);
 
         // Act
-        var result = await controller.ButtonColorExperimnt(deviceToken);
+        var result = await controller.ButtonColorExperiment(deviceToken);
 
         // Assert
         
@@ -83,26 +82,27 @@ public class ControllerValidButtonTests
     public async Task ButtonColorExperiment_DeviceHasExistingResult_ReturnsAlreadyParticipating()
     {
         // Arrange
-        var deviceToken = "your-device-token";
+        var deviceToken = "myToken";
 
-        // Mock the Mediator and its responses.
+        
         var mediatorMock = new Mock<IMediator>();
+        var logger = new Mock<ILogger<ExperimentsController>>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindExperiment.Query>(), default))
             .ReturnsAsync(new Experiment { Id = 2, Key = "button_color", Options = "red,green,blue"});
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindResult.Query>(), default))
-            .ReturnsAsync(new ExperimentResult { ExperimentId = 1, DeviceToken = deviceToken, Value = "green" }); // Simulate an existing result.
-
-        var controller = new ExperimentsController(mediatorMock.Object);
+            .ReturnsAsync(new ExperimentResult { ExperimentId = 1, DeviceToken = deviceToken, Value = "green" });
+        
+        var controller = new ExperimentsController(mediatorMock.Object, logger.Object);
 
         // Act
-        var result = await controller.ButtonColorExperimnt(deviceToken);
+        var result = await controller.ButtonColorExperiment(deviceToken);
 
         // Assert
 
         var okResult = Assert.IsType<OkObjectResult>(result);
-        okResult.Should().BeEquivalentTo("Пристрій вже бере участь в експерименті");
+        okResult.Value.Should().BeEquivalentTo("Пристрій вже бере участь в експерименті");
     }
 }

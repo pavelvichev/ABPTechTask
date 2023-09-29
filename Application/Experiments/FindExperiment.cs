@@ -33,7 +33,7 @@ namespace Application.Experiments
                 {
                     // Виконання SQL-запиту до бази даних для пошуку експерименту за ключем.
                     var experiment = await _apiContext.Experiments.FromSqlInterpolated($"FindExperiment {request.Key}")
-                        .ToListAsync();
+                        .ToListAsync(cancellationToken);
 
                     // Повертаємо перший результат запиту (або null, якщо результат не знайдений).
                     return experiment.FirstOrDefault();

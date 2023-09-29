@@ -4,9 +4,10 @@ using Application.Results;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace ABPTechTask.Tests.Controller;
+namespace ABPTechTask.Tests.Controller.Valid;
 
 public class ControllerValidPriceTests
 {
@@ -18,6 +19,7 @@ public class ControllerValidPriceTests
 
         
         var mediatorMock = new Mock<IMediator>();
+        var logger = new Mock<ILogger<ExperimentsController>>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindExperiment.Query>(), default))
             .ReturnsAsync(new Experiment { Id = 1, Key = "price", Options = "{\"10\":0.75,\"20\":0.1,\"50\":0.05,\"5\":0.1}" });
@@ -27,16 +29,16 @@ public class ControllerValidPriceTests
             .ReturnsAsync((ExperimentResult)null); 
         
         
-        var controller = new ExperimentsController(mediatorMock.Object);
+        var controller = new ExperimentsController(mediatorMock.Object, logger.Object);
 
         // Act
         
-        var result = await controller.PriceExperimnt(deviceToken);
+        var result = await controller.PriceExperiment(deviceToken);
         
     
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var responseObject = Assert.IsType<Dictionary<string, string>>(okResult.Value); // Import System.Collections.Generic for Dictionary.
+        var responseObject = Assert.IsType<Dictionary<string, string>>(okResult.Value);
         Assert.Equal("price", responseObject["key"]);
         Assert.Contains(responseObject["value"], new[] {"10" , "20", "50", "5"});
         
@@ -47,21 +49,21 @@ public class ControllerValidPriceTests
     {
         // Arrange
         var deviceToken = "myToken";
-
-        // Mock the Mediator and its responses.
+        
         var mediatorMock = new Mock<IMediator>();
+        var logger = new Mock<ILogger<ExperimentsController>>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindExperiment.Query>(), default))
             .ReturnsAsync(new Experiment { Id = 1, Key = "price", Options = "{\"10\":0.75,\"20\":0.1,\"50\":0.05,\"5\":0.1}"});
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindResult.Query>(), default))
-            .ReturnsAsync(new ExperimentResult { ExperimentId = 1, DeviceToken = deviceToken, Value = "10" }); // Simulate an existing result.
+            .ReturnsAsync(new ExperimentResult { ExperimentId = 1, DeviceToken = deviceToken, Value = "10" });
 
-        var controller = new ExperimentsController(mediatorMock.Object);
+        var controller = new ExperimentsController(mediatorMock.Object, logger.Object);
 
         // Act
-        var result = await controller.PriceExperimnt(deviceToken);
+        var result = await controller.PriceExperiment(deviceToken);
 
         // Assert
         
@@ -79,20 +81,21 @@ public class ControllerValidPriceTests
         // Arrange
         var deviceToken = "myToken";
 
-        // Mock the Mediator and its responses.
+        
         var mediatorMock = new Mock<IMediator>();
+        var logger = new Mock<ILogger<ExperimentsController>>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindExperiment.Query>(), default))
             .ReturnsAsync(new Experiment { Id = 2, Key = "price", Options = "{\"10\":0.75,\"20\":0.1,\"50\":0.05,\"5\":0.1}"});
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<FindResult.Query>(), default))
-            .ReturnsAsync(new ExperimentResult { ExperimentId = 1, DeviceToken = deviceToken, Value = "50" }); // Simulate an existing result.
+            .ReturnsAsync(new ExperimentResult { ExperimentId = 1, DeviceToken = deviceToken, Value = "50" });
 
-        var controller = new ExperimentsController(mediatorMock.Object);
+        var controller = new ExperimentsController(mediatorMock.Object,logger.Object );
 
         // Act
-        var result = await controller.PriceExperimnt(deviceToken);
+        var result = await controller.PriceExperiment(deviceToken);
 
         // Assert
 

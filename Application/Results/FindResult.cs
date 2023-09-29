@@ -11,7 +11,7 @@ namespace Application.Results
         // Клас запиту, реалізує інтерфейс IRequest<ExperimentResult>
         public class Query : IRequest<ExperimentResult>
         {
-            public string DeviceToken { get; set; } // Параметр запиту - токен пристрою.
+            public string DeviceToken { get; init; } // Параметр запиту - токен пристрою.
         }
 
         // Обробник запиту, реалізує інтерфейс IRequestHandler<Query, ExperimentResult>.
@@ -32,15 +32,15 @@ namespace Application.Results
                 {
                     // Виконання SQL-запиту до бази даних для пошуку результату експерименту за токеном пристрою.
                     var result = await _apiContext.ExperimentResults
-                        .FromSqlInterpolated($"FindResult {request.DeviceToken}").FirstOrDefaultAsync(cancellationToken);
+                        .FromSqlInterpolated($"FindResult {request.DeviceToken}").ToListAsync(cancellationToken);
 
                     // Повертаємо перший результат запиту (або null, якщо результат не знайдений).
-                    return result;
+                    return result.FirstOrDefault();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Помилка при виконанні SQL-запиту: {ex.Message}");
-                    return null;
+                    throw;
                 }
             }
         }
