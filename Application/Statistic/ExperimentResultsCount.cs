@@ -10,16 +10,15 @@ namespace Application.Statistic.Results
         // Клас запиту, реалізує інтерфейс IRequest<int>
         public class Query : IRequest<int>
         {
-            public int ExperimentId { get; init; } // Параметр запиту - ідентифікатор експерименту.
         }
 
         // Обробник запиту, реалізує інтерфейс IRequestHandler<Query, int>.
         public class Handler : IRequestHandler<Query, int>
         {
-            private readonly ABContext _apiContext; // Контекст бази даних.
+            private readonly AbContext _apiContext; // Контекст бази даних.
 
             // Конструктор, який отримує контекст бази даних через внедрення залежностей.
-            public Handler(ABContext context)
+            public Handler(AbContext context)
             {
                 _apiContext = context;
             }
@@ -30,7 +29,7 @@ namespace Application.Statistic.Results
                 try // Обробка винятків зв'язаних з помилкою під час звернення до бд
                 {
                     // Виконання SQL-запиту до бази даних для отримання кількості результатів експерименту за його ідентифікатором.
-                    var result = await _apiContext.Database.SqlQuery<int>($"EXEC PriceExprerimntsCount {request.ExperimentId}").ToListAsync(cancellationToken);
+                    var result = await _apiContext.Database.SqlQuery<int>($"EXEC ExperimentResultsCount").ToListAsync(cancellationToken);
 
                     // Повертаємо перший результат запиту (або 0, якщо результати відсутні).
                     return result.FirstOrDefault();

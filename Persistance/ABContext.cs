@@ -1,17 +1,20 @@
-﻿using Domain;
+﻿
+using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistance
 {
-    public class ABContext : DbContext
+    public class AbContext : DbContext
     {
-        public ABContext()
+        public AbContext()
         {
         }
-        public ABContext(DbContextOptions<ABContext> options) : base (options) { }
+        public AbContext(DbContextOptions<AbContext> options) : base (options) { }
        
         public virtual DbSet<ExperimentResult> ExperimentResults { get; set; }
         public virtual DbSet<Experiment> Experiments { get; set; }
-
+        public virtual DbSet<Stat> Statistics { get; set; }
+        
+        
     }
 }

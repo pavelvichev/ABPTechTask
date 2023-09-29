@@ -18,10 +18,10 @@ namespace Application.Experiments
         // Обробник запиту, реалізує інтерфейс IRequestHandler<Query, Experiment>.
         public class Handler : IRequestHandler<Query, Experiment>
         {
-            private readonly ABContext _apiContext; // Контекст бази даних.
+            private readonly AbContext _apiContext; // Контекст бази даних.
 
             // Конструктор, який отримує контекст бази даних через внедрення залежностей.
-            public Handler(ABContext context)
+            public Handler(AbContext context)
             {
                 _apiContext = context;
             }

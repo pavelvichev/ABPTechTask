@@ -5,6 +5,7 @@ using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Application.Statistic;
 
 namespace ABPTechTask.Controllers
 {
@@ -165,23 +166,18 @@ namespace ABPTechTask.Controllers
                 var experimentPrice = await _mediator.Send(new FindExperiment.Query { Key = "price" });
 
                 // Отримання кількості результатів для експерименту з кнопкою кольору.
-                var experimentButtonColorResultCount = await _mediator.Send(new ExperimentResultsCount.Query
-                    { ExperimentId = experimentButtonColor.Id });
+                var experimentResultsCount = await _mediator.Send(new ExperimentResultsCount.Query());
 
-                // Отримання кількості результатів для експерименту з ціною.
-                var experimentPriceResultCount = await _mediator.Send(new ExperimentResultsCount.Query
-                    { ExperimentId = experimentPrice.Id });
+                // Отримання детальної інформації для кожного експерименту
+                var buttonStat = await _mediator.Send(new ButtonColorStatistic.Query());
+                var priceStat = await _mediator.Send(new PriceStatistic.Query());
 
                 // Створення словника, що містить статистику експериментів.
-                var statistic = new Dictionary<string, int>
-                {
-                    { "Всі пристрої", experimentButtonColorResultCount + experimentPriceResultCount },
-                    { "Експеримент з кольором кнопки", experimentButtonColorResultCount },
-                    { "Експеримент з ціною", experimentPriceResultCount }
-                };
+                var statistic ="button_color : [ \n" +  buttonStat + " \n],\n" + "price : [\n" + priceStat + "\n],\n" + "\nTotal Devices : " + experimentResultsCount;
 
                 // Повертаємо статистику у форматі JSON.
                 _logger.LogInformation($"Statistic {statistic}");
+                
                 return Ok(statistic);
             }
             catch(Exception ex)
