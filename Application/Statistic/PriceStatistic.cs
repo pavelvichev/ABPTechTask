@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Persistance;
 using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Application.Statistic;
 
@@ -23,7 +25,13 @@ public class PriceStatistic
         {
             var result = await _apiContext.Statistics.FromSqlRaw($"PriceStat").ToListAsync(cancellationToken);
 
-            return result.FirstOrDefault()?.Statistic.Replace("},", "},\n");
+            var statistic = result.FirstOrDefault()?.Statistic;
+            
+            JObject json = JObject.Parse(statistic!);
+            
+            string formattedJson = json.ToString(Formatting.Indented);
+            
+            return formattedJson;
         }
     }
 }

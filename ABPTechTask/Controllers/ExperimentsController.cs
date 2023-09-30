@@ -159,12 +159,6 @@ namespace ABPTechTask.Controllers
         {
             try
             {
-                // Отримання інформації про експеримент з кнопкою кольору з бази даних за допомогою Mediator.
-                var experimentButtonColor = await _mediator.Send(new FindExperiment.Query { Key = "button_color" });
-
-                // Отримання інформації про експеримент з ціною з бази даних за допомогою Mediator.
-                var experimentPrice = await _mediator.Send(new FindExperiment.Query { Key = "price" });
-
                 // Отримання кількості результатів для експерименту з кнопкою кольору.
                 var experimentResultsCount = await _mediator.Send(new ExperimentResultsCount.Query());
 
@@ -173,7 +167,8 @@ namespace ABPTechTask.Controllers
                 var priceStat = await _mediator.Send(new PriceStatistic.Query());
 
                 // Створення словника, що містить статистику експериментів.
-                var statistic ="button_color : [ \n" +  buttonStat + " \n],\n" + "price : [\n" + priceStat + "\n],\n" + "\nTotal Devices : " + experimentResultsCount;
+                var statistic = "button_color: " + buttonStat + "\nprice: " + priceStat + "\nTotal Devices: " + experimentResultsCount;
+
 
                 // Повертаємо статистику у форматі JSON.
                 _logger.LogInformation($"Statistic {statistic}");

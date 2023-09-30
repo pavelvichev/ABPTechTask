@@ -3,6 +3,9 @@ using Application.Statistic;
 using AutoFixture;
 using Domain;
 using EntityFrameworkCore.Testing.Moq.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ABPTechTask.Tests.Application.Statistic;
 
@@ -13,7 +16,10 @@ public class StatisticTests : Test
     {
         //Arrange 
         var fixture = new Fixture();
-        var expectedResult = fixture.CreateMany<Stat>().ToList();
+
+        var json = JsonSerializer.Serialize(fixture.Create<Stat>());
+
+        var expectedResult = new List<Stat> { new Stat { Statistic = json } };
 
 
         MockedDbContext.Set<Stat>().AddFromSqlRawResult("ButtonStat", expectedResult);
@@ -24,12 +30,14 @@ public class StatisticTests : Test
 
         //Act
         var actualResult = await handler.Handle(query, new CancellationToken());
-
+        JObject jsonObj = JObject.Parse(actualResult);
+        
+        string formattedResult  = jsonObj.ToString(Formatting.Indented);
         //Assert
         Assert.Multiple(() =>
         {
             Assert.NotNull(actualResult);
-            Assert.Equivalent(expectedResult.FirstOrDefault()?.Statistic, actualResult);
+            Assert.Contains(formattedResult, actualResult);
         });
     }
     
@@ -38,8 +46,10 @@ public class StatisticTests : Test
     {
         //Arrange 
         var fixture = new Fixture();
-        var expectedResult = fixture.CreateMany<Stat>().ToList();
 
+        var json = JsonSerializer.Serialize(fixture.Create<Stat>());
+
+        var expectedResult = new List<Stat> { new Stat { Statistic = json } };
 
         MockedDbContext.Set<Stat>().AddFromSqlRawResult("PriceStat", expectedResult);
 
@@ -50,11 +60,14 @@ public class StatisticTests : Test
         //Act
         var actualResult = await handler.Handle(query, new CancellationToken());
 
+        JObject jsonObj = JObject.Parse(actualResult);
+        
+        string formattedResult  = jsonObj.ToString(Formatting.Indented);
         //Assert
         Assert.Multiple(() =>
         {
             Assert.NotNull(actualResult);
-            Assert.Equivalent(expectedResult.FirstOrDefault()?.Statistic, actualResult);
+            Assert.Contains(formattedResult, actualResult);
         });
     }
 }

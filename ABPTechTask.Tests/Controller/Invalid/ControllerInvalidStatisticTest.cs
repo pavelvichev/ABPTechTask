@@ -1,5 +1,6 @@
 ﻿using ABPTechTask.Controllers;
 using Application.Experiments;
+using Application.Statistic.Results;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class ControllerInvalidStatisticTest
         var mediatorMock = new Mock<IMediator>();
         var logger = new Mock<ILogger<ExperimentsController>>();
         mediatorMock
-            .Setup(m => m.Send(It.IsAny<FindExperiment.Query>(), default))
+            .Setup(m => m.Send(It.IsAny<ExperimentResultsCount.Query>(), default))
             .ThrowsAsync(new Exception("Simulated exception"));
 
         var controller = new ExperimentsController(mediatorMock.Object, logger.Object);

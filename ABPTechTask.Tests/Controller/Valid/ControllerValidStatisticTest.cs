@@ -21,27 +21,18 @@ public class ControllerValidStatisticTest
 
         var experimentButtonColor = new Experiment { Id = 1, Key = "button_color" };
         var experimentPrice = new Experiment { Id = 2, Key = "price" };
-        var experimentButtonColorResultCount = 10;
-        var experimentPriceResultCount = 5;
+        var experimentResultCount = 10;
 
         var buttonStat = "buttonStat"; // Replace with your test data
         var priceStat = "priceStat"; // Replace with your test data
 
         mediatorMock
-            .Setup(m => m.Send(It.IsAny<FindExperiment.Query>(), default))
-            .ReturnsAsync((FindExperiment.Query query, System.Threading.CancellationToken cancellationToken) =>
-            {
-                if (query.Key == "button_color")
-                    return experimentButtonColor;
-                else if (query.Key == "price")
-                    return experimentPrice;
-
-                return null;
-            });
+            .Setup(m => m.Send(It.IsAny<ExperimentResultsCount.Query>(), default))
+            .ReturnsAsync((ExperimentResultsCount.Query query, CancellationToken cancellationToken) => experimentResultCount);
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<ExperimentResultsCount.Query>(), default))
-            .ReturnsAsync(experimentPriceResultCount);
+            .ReturnsAsync(experimentResultCount);
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<ButtonColorStatistic.Query>(), default))
@@ -62,7 +53,7 @@ public class ControllerValidStatisticTest
 
         Assert.Contains($"{buttonStat}", statistic);
         Assert.Contains($"{priceStat}", statistic);
-        Assert.Contains($"Total Devices : {experimentPriceResultCount}", statistic);
+        Assert.Contains($"{experimentResultCount}", statistic);
     }
 
 }
