@@ -83,3 +83,4 @@ C:\Users\Steklyashka\source\repos\ABPTechTask\ABPTechTask\bin\Debug\net7.0\Appli
 C:\Users\Steklyashka\source\repos\ABPTechTask\ABPTechTask\bin\Debug\net7.0\Domain.pdb
 C:\Users\Steklyashka\source\repos\ABPTechTask\ABPTechTask\bin\Debug\net7.0\Persistance.pdb
 C:\Users\Steklyashka\source\repos\ABPTechTask\ABPTechTask\bin\Debug\net7.0\RandomStringCreator.dll
+C:\Users\Steklyashka\source\repos\ABPTechTask\ABPTechTask\bin\Debug\net7.0\Newtonsoft.Json.dll

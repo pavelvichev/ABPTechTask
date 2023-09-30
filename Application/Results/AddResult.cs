@@ -17,10 +17,10 @@ namespace Application.Results
         // Обробник команди, реалізує інтерфейс IRequestHandler<Command>.
         public class Handler : IRequestHandler<Command>
         {
-            private readonly ABContext _context; // Контекст бази даних.
+            private readonly AbContext _context; // Контекст бази даних.
 
             // Конструктор, який отримує контекст бази даних через внедрення залежностей.
-            public Handler(ABContext context)
+            public Handler(AbContext context)
             {
                 _context = context;
             }

@@ -11,7 +11,7 @@ namespace Persistance
 {
     public class Seed
     {
-        public static async Task SeedData(ABContext context)
+        public static async Task SeedData(AbContext context)
         {
             if (context.Experiments.Any()) return;
 

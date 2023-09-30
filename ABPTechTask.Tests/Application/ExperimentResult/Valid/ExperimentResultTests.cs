@@ -43,6 +43,7 @@ namespace ABPTechTask.Tests.Application.ExperimentResult.Valid
             var expectedResult = 1;
             
             var experiment = fixture.Create<Domain.Experiment>();
+            
             MockedDbContext.Set<Domain.Experiment>().AddRange(experiment);
             await MockedDbContext.SaveChangesAsync();
 

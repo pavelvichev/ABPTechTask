@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "YL2AxvrMW5/xioI2iJecbb1Csm58uzkZS9jbkr9HX1huRrm7exHJuoQGJvK6+JSVwfeK3etP6jJZGHxIsNGK5g==",
+  "dgSpecHash": "dTgux7ZAVHqXZG5kVSRSMDMra5FXY6ib/b6Qm6aaDIjJOWx4wltVI+0Ktuav2hDoBVAMUuGKWZyI7XUC8tc7zA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Steklyashka\\source\\repos\\ABPTechTask\\Domain\\Domain.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "D:\\nuget\\microsoft.entityframeworkcore.abstractions\\7.0.11\\microsoft.entityframeworkcore.abstractions.7.0.11.nupkg.sha512"
+  ],
   "logs": []
 }

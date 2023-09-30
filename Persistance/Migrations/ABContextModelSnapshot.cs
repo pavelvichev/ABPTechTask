@@ -9,7 +9,7 @@ using Persistance;
 
 namespace Persistance.Migrations
 {
-    [DbContext(typeof(ABContext))]
+    [DbContext(typeof(AbContext))]
     partial class ABContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -30,11 +30,9 @@ namespace Persistance.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Key")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Options")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -51,19 +49,25 @@ namespace Persistance.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DeviceToken")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ExperimentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ExperimentResults");
+                });
+
+            modelBuilder.Entity("Domain.Stat", b =>
+                {
+                    b.Property<string>("Statistic")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Statistics");
                 });
 #pragma warning restore 612, 618
         }

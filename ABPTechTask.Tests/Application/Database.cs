@@ -6,11 +6,11 @@ namespace ABPTechTask.Tests.Application
 {
     public class Test
     {
-        protected readonly ABContext MockedDbContext;
+        protected readonly AbContext MockedDbContext;
         protected Test()
         {
-            var dbContextOptions = new DbContextOptionsBuilder<ABContext>().UseInMemoryDatabase("Hello").Options;
-            MockedDbContext = Create.MockedDbContextFor<ABContext>(dbContextOptions);
+            var dbContextOptions = new DbContextOptionsBuilder<AbContext>().UseInMemoryDatabase("Hello").Options;
+            MockedDbContext = Create.MockedDbContextFor<AbContext>(dbContextOptions);
         }
     }
 }

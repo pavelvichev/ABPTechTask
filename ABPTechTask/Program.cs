@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(FindResult.Handler).Assembly));
 
-builder.Services.AddDbContext<ABContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
+builder.Services.AddDbContext<AbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,7 +34,7 @@ var services = scope.ServiceProvider;
 
 try
 {
-    var context = services.GetService<ABContext>();
+    var context = services.GetService<AbContext>();
     await context.Database.MigrateAsync();
     await Seed.SeedData(context);
 }

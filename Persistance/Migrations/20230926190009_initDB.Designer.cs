@@ -10,7 +10,7 @@ using Persistance;
 
 namespace Persistance.Migrations
 {
-    [DbContext(typeof(ABContext))]
+    [DbContext(typeof(AbContext))]
     [Migration("20230926190009_initDB")]
     partial class initDB
     {
